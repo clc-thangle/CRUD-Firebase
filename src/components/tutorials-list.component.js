@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TutorialDataService from "../services/tutorial.service";
-
+import SearchItem from './SearchItem'
 import Tutorial from "./tutorial.component";
 
 export default class TutorialsList extends Component {
@@ -15,6 +15,7 @@ export default class TutorialsList extends Component {
             tutorials: [],
             currentTutorial: null,
             currentIndex: -1,
+            keyword: '',
         };
     }
 
@@ -69,14 +70,25 @@ export default class TutorialsList extends Component {
             });
     }
 
-    render() {
-        const { tutorials, currentTutorial, currentIndex } = this.state;
+    onSearch = (keyword) => { 
+        this.setState({
+            keyword: keyword
+        })
+        console.log(keyword);
+    }
 
+    render() {
+        var { tutorials, currentTutorial, currentIndex, keyword} = this.state;
+        if(keyword) {
+            tutorials = tutorials.filter((task) => {
+                return task.title.toLowerCase().indexOf(keyword) !== -1;
+            })
+        }
         return (
             <div className="list row">
                 <div className="col-md-6">
+                    <SearchItem onSearch={this.onSearch} />
                     <h4>Tutorials List</h4>
-
                     <ul className="list-group">
                         {tutorials &&
                             tutorials.map((tutorial, index) => (
